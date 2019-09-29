@@ -18,17 +18,23 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
+
 import itsur.german.audiolibrospro.fragments.DetalleFragment;
 import itsur.german.audiolibrospro.fragments.SelectorFragment;
 
 public class MainActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
+    private AdaptadorLibrosFiltro mAdaptador;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("AudioLibros", "oncreate");
+        mAdaptador = ((Aplicacion) getApplicationContext()).getAdaptador();
         setContentView(R.layout.activity_main);
 
         if ((findViewById(R.id.contenedor_pequeno) != null) &&
@@ -41,6 +47,45 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(
+                R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action",
+                        Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            }
+        });
+
+        //Pestañas
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs.addTab(tabs.newTab().setText("Todos"));
+        tabs.addTab(tabs.newTab().setText("Nuevos"));
+        tabs.addTab(tabs.newTab().setText("Leidos"));
+        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0: //Todos
+                        mAdaptador.setNovedad(false);
+                        mAdaptador.setLeido(false);
+                        break;
+                    case 1: //Nuevos
+                        mAdaptador.setNovedad(true);
+                        mAdaptador.setLeido(false);
+                        break;
+                    case 2: //Leidos
+                        mAdaptador.setNovedad(false);
+                        mAdaptador.setLeido(true);
+                        break;
+                }
+                mAdaptador.notifyDataSetChanged();
+            }
+            @Override public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
     }
 
     @Override

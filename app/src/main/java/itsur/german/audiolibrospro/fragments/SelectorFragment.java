@@ -19,10 +19,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.Vector;
 
 import itsur.german.audiolibrospro.AdaptadorLibros;
+import itsur.german.audiolibrospro.AdaptadorLibrosFiltro;
 import itsur.german.audiolibrospro.Aplicacion;
 import itsur.german.audiolibrospro.Libro;
 import itsur.german.audiolibrospro.MainActivity;
@@ -31,7 +33,7 @@ import itsur.german.audiolibrospro.R;
 public class SelectorFragment extends Fragment {
     private Activity mActividad;
     private RecyclerView mRecyclerView;
-    private AdaptadorLibros mAdaptador;
+    private AdaptadorLibrosFiltro mAdaptador;
     private Vector<Libro> mVectorLibros;
 
     @Override
@@ -57,7 +59,7 @@ public class SelectorFragment extends Fragment {
         mAdaptador.setOnItemClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity) mActividad).mostrarDetalle(mRecyclerView.getChildAdapterPosition(v));
+                ((MainActivity) mActividad).mostrarDetalle((int) mAdaptador.getItemId(mRecyclerView.getChildAdapterPosition(v)));
             }
         });
 
@@ -82,13 +84,14 @@ public class SelectorFragment extends Fragment {
                                         .setAction("SI", new View.OnClickListener() {
                                             @Override
                                             public void onClick(View view) {
-                                                mVectorLibros.remove(id);
+                                                mAdaptador.borrar(id);
                                                 mAdaptador.notifyDataSetChanged();
                                             }
                                         }).show();
                                 break;
                             case 2: //Insertar
-                                mVectorLibros.add(mVectorLibros.elementAt(id));
+                                int posicion = mRecyclerView.getChildLayoutPosition(v);
+                                mAdaptador.insertar((Libro) mAdaptador.getItem(posicion));
                                 mAdaptador.notifyDataSetChanged();
                                 Snackbar.make(v,"Libro insertado", Snackbar.LENGTH_INDEFINITE)
                                         .setAction("OK", new View.OnClickListener() {
