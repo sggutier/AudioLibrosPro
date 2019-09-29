@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.Vector;
 
 public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHolder> {
-     private View.OnClickListener mOnClickListener;
+    private View.OnClickListener mOnClickListener;
+    private View.OnLongClickListener mOnLongClickListener;
 
     private LayoutInflater inflador;
     //Crea Layouts a partir del XML
@@ -44,6 +45,7 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
         // Inflamos la vista desde el xml
         View v = inflador.inflate(R.layout.elemento_selector, null);
         v.setOnClickListener(mOnClickListener);
+        v.setOnLongClickListener(mOnLongClickListener);
         return new ViewHolder(v);
     }
     // Usando como base el ViewHolder y lo personalizamos
@@ -60,6 +62,11 @@ public class AdaptadorLibros extends RecyclerView.Adapter<AdaptadorLibros.ViewHo
 
     public void setOnItemClickListener(View.OnClickListener onClickListener) {
         this.mOnClickListener = onClickListener;
+    }
+
+    public void setOnItemLongClickListener(View.OnLongClickListener
+                                                   onLongClickListener) {
+        this.mOnLongClickListener = onLongClickListener;
     }
 
 
