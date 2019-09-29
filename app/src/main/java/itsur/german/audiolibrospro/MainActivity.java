@@ -2,6 +2,7 @@ package itsur.german.audiolibrospro;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,7 +28,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main);
+        Log.d("AudioLibros", "oncreate");
+        setContentView(R.layout.activity_main);
 
         if ((findViewById(R.id.contenedor_pequeno) != null) &&
                 (getSupportFragmentManager().findFragmentById(
@@ -34,12 +38,24 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.contenedor_pequeno, primerFragment).commit();
         }
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SelectorFragment fm = (SelectorFragment) getSupportFragmentManager().findFragmentById(R.id.contenedor_pequeno);
+        if(fm != null) {
+            getSupportFragmentManager().beginTransaction().remove(fm).commit();
+        }
     }
 
     public void mostrarDetalle(final int id) {
         DetalleFragment detalleFragment = (DetalleFragment)
                 getSupportFragmentManager().findFragmentById(R.id.detalle_fragment);
-        if (detalleFragment != null) {
+        if (detalleFragment != null && (findViewById(R.id.contenedor_pequeno) == null) ) {
             detalleFragment.ponInfoLibro(id);
         } else {
             DetalleFragment nuevoFragment = new DetalleFragment();
@@ -72,12 +88,8 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.menu_preferencias) {
             Toast.makeText(this, "Preferencias", Toast.LENGTH_LONG).show();
             return true;
-        } else if (id == R.id.menu_ultimo) {
-            irUltimoVisitado();
-            return true;
-        } else if (id == R.id.menu_buscar) {
-            return true;
-        } else if (id == R.id.menu_acerca) {
+        }
+        else if (id == R.id.menu_acerca) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Mensaje de Acerca De");
             builder.setPositiveButton(android.R.string.ok, null);

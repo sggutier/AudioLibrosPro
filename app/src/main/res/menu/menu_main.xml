@@ -7,19 +7,6 @@
         app:showAsAction="ifRoom"
         android:title="Preferencias"/>
     <item
-        android:id="@+id/menu_ultimo"
-        android:icon="@android:drawable/ic_menu_set_as"
-        android:orderInCategory="100"
-        app:showAsAction="ifRoom|withText"
-        android:title="Último leido"/>
-    <item
-        android:id="@+id/menu_buscar"
-        android:orderInCategory="90"
-        android:icon="@android:drawable/ic_menu_search"
-        app:showAsAction="ifRoom|collapseActionView"
-        android:title="Buscar"
-        app:actionViewClass="android.widget.SearchView" />
-    <item
         android:id="@+id/menu_acerca"
         android:orderInCategory="110"
         app:showAsAction="never"
