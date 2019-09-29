@@ -15,10 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -39,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         Log.d("AudioLibros", "oncreate");
         mAdaptador = ((Aplicacion) getApplicationContext()).getAdaptador();
-        setContentView(R.layout.activity_drawer_layout);
+        setContentView(R.layout.activity_main);
 
         if ((findViewById(R.id.contenedor_pequeno) != null) &&
                 (getSupportFragmentManager().findFragmentById(
