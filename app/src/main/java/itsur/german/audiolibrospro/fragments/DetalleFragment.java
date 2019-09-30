@@ -1,5 +1,6 @@
 package itsur.german.audiolibrospro.fragments;
 
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.MediaController;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.preference.PreferenceManager;
 
 import java.io.IOException;
 
@@ -29,7 +31,11 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         Log.d("Audiolibros", "Entramos en onPrepared de MediaPlayer");
-        mediaPlayer.start();
+        SharedPreferences preferencias = PreferenceManager
+                .getDefaultSharedPreferences(getActivity());
+        if (preferencias.getBoolean("pref_autoreproducir", true)) {
+            mediaPlayer.start();
+        }
         mediaController.setMediaPlayer(this);
         mediaController.setAnchorView(getView());
         mediaController.setPadding(0, 0, 0, 110);
@@ -76,9 +82,8 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
 
     @Override
     public void onResume(){
-        DetalleFragment detalleFragment = (DetalleFragment)
-                getFragmentManager().findFragmentById(R.id.detalle_fragment);
-        if (detalleFragment == null ) {
+        SelectorFragment selectorFragment = (SelectorFragment) getFragmentManager().findFragmentById(R.id.recycler_view);
+        if (selectorFragment == null ) {
             ((MainActivity) getActivity()).mostrarElementos(false);
         }
         super.onResume();

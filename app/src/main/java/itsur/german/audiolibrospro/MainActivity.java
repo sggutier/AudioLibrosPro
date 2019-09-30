@@ -1,5 +1,6 @@
 package itsur.german.audiolibrospro;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import itsur.german.audiolibrospro.fragments.DetalleFragment;
+import itsur.german.audiolibrospro.fragments.PreferenciasFragment;
 import itsur.german.audiolibrospro.fragments.SelectorFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,13 +45,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAdaptador = ((Aplicacion) getApplicationContext()).getAdaptador();
         setContentView(R.layout.activity_main);
 
-        if ((findViewById(R.id.contenedor_pequeno) != null) &&
-                (getSupportFragmentManager().findFragmentById(
-                        R.id.contenedor_pequeno) == null)){
-            SelectorFragment primerFragment = new SelectorFragment();
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.contenedor_pequeno, primerFragment).commit();
-        }
+        int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
+                R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
+        SelectorFragment primerFragment = new SelectorFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(idContenedor, primerFragment)
+                .commit();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +123,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    public void abrePreferencias() {
+        int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
+                R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
+        PreferenciasFragment prefFragment = new PreferenciasFragment();
+        getSupportFragmentManager().beginTransaction()
+                .replace(idContenedor, prefFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     public void mostrarDetalle(final int id) {
         DetalleFragment detalleFragment = (DetalleFragment)
                 getSupportFragmentManager().findFragmentById(R.id.detalle_fragment);
@@ -157,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_preferencias) {
-            Toast.makeText(this, "Preferencias", Toast.LENGTH_LONG).show();
+            abrePreferencias();
             return true;
         }
         else if (id == R.id.menu_acerca) {

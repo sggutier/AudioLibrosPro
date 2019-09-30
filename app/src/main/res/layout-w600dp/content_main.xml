@@ -6,9 +6,9 @@
     android:orientation="horizontal"
     android:layout_height="match_parent">
 
-    <fragment
-        android:id="@+id/selector_fragment"
-        android:name="itsur.german.audiolibrospro.fragments.SelectorFragment"
+    <LinearLayout
+        android:id="@+id/contenedor_izquierdo"
+        android:orientation="vertical"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1" />
