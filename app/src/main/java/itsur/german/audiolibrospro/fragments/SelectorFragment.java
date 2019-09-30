@@ -11,15 +11,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 
 import java.util.Vector;
 
@@ -119,6 +118,35 @@ public class SelectorFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_selector, menu);
+        MenuItem searchItem = menu.findItem(R.id.menu_buscar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(
+                new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextChange(String query) {
+                        mAdaptador.setBusqueda(query);
+                        mAdaptador.notifyDataSetChanged();
+                        return false;
+                    }
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        return false;
+                    }
+                });
+        searchItem.setOnActionExpandListener(
+                new MenuItem.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem item) {
+                        mAdaptador.setBusqueda("");
+                        mAdaptador.notifyDataSetChanged();
+                        return true; // Para permitir cierre
+                    }
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem item) {
+                        return true; // Para permitir expansión
+                    }
+                });
+
         super.onCreateOptionsMenu(menu, inflater);
     }
 
