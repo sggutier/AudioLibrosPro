@@ -111,6 +111,12 @@ public class SelectorFragment extends Fragment {
     }
 
     @Override
+    public void onResume(){
+        ((MainActivity) getActivity()).mostrarElementos(true);
+        super.onResume();
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_selector, menu);
         super.onCreateOptionsMenu(menu, inflater);

@@ -18,6 +18,7 @@ import java.io.IOException;
 
 import itsur.german.audiolibrospro.Aplicacion;
 import itsur.german.audiolibrospro.Libro;
+import itsur.german.audiolibrospro.MainActivity;
 import itsur.german.audiolibrospro.R;
 
 public class DetalleFragment extends Fragment implements View.OnTouchListener, MediaPlayer.OnPreparedListener, MediaController.MediaPlayerControl {
@@ -72,6 +73,17 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
             Log.e("Audiolibros", "ERROR: No se puede reproducir "+audio,e);
         }
     }
+
+    @Override
+    public void onResume(){
+        DetalleFragment detalleFragment = (DetalleFragment)
+                getFragmentManager().findFragmentById(R.id.detalle_fragment);
+        if (detalleFragment == null ) {
+            ((MainActivity) getActivity()).mostrarElementos(false);
+        }
+        super.onResume();
+    }
+
 
     public void ponInfoLibro(int id) {
         ponInfoLibro(id, getView());

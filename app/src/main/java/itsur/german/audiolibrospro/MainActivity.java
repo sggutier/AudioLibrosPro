@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -27,9 +29,12 @@ import itsur.german.audiolibrospro.fragments.DetalleFragment;
 import itsur.german.audiolibrospro.fragments.SelectorFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
     private AdaptadorLibrosFiltro mAdaptador;
+    private AppBarLayout mAppBarLayout;
+    private TabLayout mTabs;
+    private DrawerLayout mDrawer;
+    private ActionBarDrawerToggle mToggle;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,26 +51,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .add(R.id.contenedor_pequeno, primerFragment).commit();
         }
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(
-                R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action",
-                        Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                irUltimoVisitado();
             }
         });
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         //Pestañas
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText("Todos"));
-        tabs.addTab(tabs.newTab().setText("Nuevos"));
-        tabs.addTab(tabs.newTab().setText("Leidos"));
-        tabs.setTabMode(TabLayout.MODE_SCROLLABLE);
-        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mTabs = (TabLayout) findViewById(R.id.tabs);
+        mTabs.addTab(mTabs.newTab().setText("Todos"));
+        mTabs.addTab(mTabs.newTab().setText("Nuevos"));
+        mTabs.addTab(mTabs.newTab().setText("Leidos"));
+        mTabs.setTabMode(TabLayout.MODE_SCROLLABLE);
+        mTabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override public void onTabSelected(TabLayout.Tab tab) {
                 switch (tab.getPosition()) {
                     case 0: //Todos
@@ -88,17 +96,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         // Navigation Drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(
+        mDrawer = (DrawerLayout) findViewById(
                 R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,
-                drawer, toolbar, R.string.drawer_open, R.string. drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
+        mToggle = new ActionBarDrawerToggle(this,
+                mDrawer, toolbar, R.string.drawer_open, R.string. drawer_close);
+        mDrawer.addDrawerListener(mToggle);
+        mToggle.syncState();
+        mToggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
         NavigationView navigationView = (NavigationView) findViewById(
                 R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
     }
 
     @Override
@@ -125,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             transaccion.replace(R.id.contenedor_pequeno, nuevoFragment);
             transaccion.addToBackStack(null);
             transaccion.commit();
+            Log.d("AudioLibros","Fragment añadido");
         }
         SharedPreferences pref = getSharedPreferences(
                 "itsur.german.audiolibrospro", MODE_PRIVATE);
@@ -185,20 +198,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mAdaptador.setGenero(Libro.G_SUSPENSE);
             mAdaptador.notifyDataSetChanged();
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(
-                R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        mDrawer.closeDrawer(GravityCompat.START);
         return true;
     }
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(
-                R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
     }
 
+    public void mostrarElementos(boolean mostrar) {
+        mAppBarLayout.setExpanded(mostrar);
+        mToggle.setDrawerIndicatorEnabled(mostrar);
+        if (mostrar) {
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            mTabs.setVisibility(View.VISIBLE);
+        } else {
+            mTabs.setVisibility(View.GONE);
+            mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
+    }
+
+
+}
