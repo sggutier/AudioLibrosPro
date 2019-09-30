@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -116,11 +117,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onPause() {
-        super.onPause();
-        SelectorFragment fm = (SelectorFragment) getSupportFragmentManager().findFragmentById(R.id.contenedor_pequeno);
-        if(fm != null) {
-            getSupportFragmentManager().beginTransaction().remove(fm).commit();
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
         }
+        super.onPause();
     }
 
     public void abrePreferencias() {
