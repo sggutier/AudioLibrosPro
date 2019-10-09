@@ -46,13 +46,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAdaptador = ((Aplicacion) getApplicationContext()).getAdaptador();
         setContentView(R.layout.activity_main);
 
-        int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
-                R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
-        SelectorFragment primerFragment = new SelectorFragment();
-        getSupportFragmentManager().beginTransaction()
-                .add(idContenedor, primerFragment)
-                .commit();
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +106,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(
                 R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
+                R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
+        SelectorFragment primerFragment = new SelectorFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(idContenedor, primerFragment)
+                .commit();
     }
 
     @Override
