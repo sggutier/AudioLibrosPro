@@ -22,6 +22,10 @@ public class ServicioReproduccion extends Service {
         }
     }
 
+    public void reloadMediaPlayer() {
+        mediaPlayer = new MediaPlayer();
+    }
+
     public MediaPlayer getMediaPlayer() {
         return mediaPlayer;
     }
@@ -29,7 +33,6 @@ public class ServicioReproduccion extends Service {
     @Override
     public void onCreate() {
         Log.d("aoeu", "Servicio creado");
-        mediaPlayer = new MediaPlayer();
     }
 
     @Override

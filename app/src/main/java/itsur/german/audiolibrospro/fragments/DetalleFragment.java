@@ -86,6 +86,7 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
                 Log.d("woof", "Servicio conectadezco");
                 BinderReproduccion binder = (BinderReproduccion) service;
                 mServicioReproduccion = binder.obtenServicio();
+                mServicioReproduccion.reloadMediaPlayer();
                 Log.d("aosnth", "Se conecto al servicio");
 
                 mediaPlayer = mServicioReproduccion.getMediaPlayer();
@@ -136,12 +137,6 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
     @Override
     public void onStop() {
         mediaController.hide();
-        try {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-        } catch (Exception e) {
-            Log.e("Audiolibros", "Error en mediaPlayer.stop()");
-        }
         super.onStop();
     }
 
@@ -202,5 +197,17 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
     @Override
     public int getAudioSessionId() {
         return 0;
+    }
+
+    @Override
+    public void onDetach() {
+        Log.d("aoeu", "OnDetach called");
+        try {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        } catch (Exception e) {
+            Log.e("Audiolibros", "Error en mediaPlayer.stop()");
+        }
+        super.onDetach();
     }
 }
