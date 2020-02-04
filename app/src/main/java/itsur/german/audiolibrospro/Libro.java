@@ -33,6 +33,7 @@ public class Libro {
 
     public static Vector<Libro> ejemploLibros() {
         final String SERVIDOR =
+                //"http://192.168.31.80:8000/";
                 "http://www.dcomg.upv.es/~jtomas/android/audiolibros/";
         Vector<Libro> libros = new Vector<Libro>();
         libros.add(new Libro("Kappa", "Akutagawa",

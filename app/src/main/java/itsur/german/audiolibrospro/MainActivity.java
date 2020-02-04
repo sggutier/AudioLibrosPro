@@ -2,6 +2,7 @@ package itsur.german.audiolibrospro;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -43,6 +45,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("AudioLibros", "oncreate");
+        boolean startANew = false;
+        if(savedInstanceState == null) {
+            startANew = true;
+        }
+        else {
+            int orientation = getResources().getConfiguration().orientation;
+            int lastOrientation = savedInstanceState.getInt("lastOri");
+            if(orientation != lastOrientation) {
+                for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                    getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+                }
+                startANew = true;
+            }
+        }
         mAdaptador = ((Aplicacion) getApplicationContext()).getAdaptador();
         setContentView(R.layout.activity_main);
 
@@ -106,11 +122,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(
                 R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(startANew) {
+            createSubFragments();
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void createSubFragments() {
         int idContenedor = (findViewById(R.id.contenedor_pequeno) != null) ?
                 R.id.contenedor_pequeno : R.id.contenedor_izquierdo;
         SelectorFragment primerFragment = new SelectorFragment();
@@ -120,11 +138,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onPause() {
-        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
-            getSupportFragmentManager().beginTransaction().remove(fragment).commit();
-        }
-        super.onPause();
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt(
+                "lastOri",
+                getResources().getConfiguration().orientation
+        );
+        super.onSaveInstanceState(outState);
     }
 
     public void abrePreferencias() {
