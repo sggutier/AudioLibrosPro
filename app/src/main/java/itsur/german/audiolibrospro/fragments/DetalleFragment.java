@@ -36,6 +36,7 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
     public static String ARG_ID_LIBRO = "id_libro";
     ServicioReproduccion mServicioReproduccion;
     MediaPlayer mediaPlayer;
+    ServiceConnection gestionConexion;
     MediaController mediaController;
 
     @Override
@@ -80,7 +81,7 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
 //        }
 //        mediaPlayer = new MediaPlayer();
 
-        ServiceConnection gestionConexion = new ServiceConnection() {
+        gestionConexion = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 Log.d("woof", "Servicio conectadezco");
@@ -109,7 +110,6 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
         Context contexto = this.getContext();
         Intent intent = new Intent(this.getContext(), ServicioReproduccion.class);
         contexto.bindService(intent, gestionConexion, Context.BIND_AUTO_CREATE);
-
     }
 
     @Override
@@ -199,14 +199,16 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
         return 0;
     }
 
+
+
     @Override
     public void onDetach() {
+        mediaPlayer.stop();
+        mediaPlayer.release();
         Log.d("aoeu", "OnDetach called");
-        try {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-        } catch (Exception e) {
-            Log.e("Audiolibros", "Error en mediaPlayer.stop()");
+        if(gestionConexion != null) {
+            Context contexto = this.getContext();
+            contexto.unbindService(gestionConexion);
         }
         super.onDetach();
     }

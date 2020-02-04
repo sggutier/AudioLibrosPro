@@ -22,7 +22,18 @@ public class ServicioReproduccion extends Service {
         }
     }
 
+    private void stopMedia() {
+        if(mediaPlayer == null) {
+            return;
+        }
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.stop();
+        }
+        mediaPlayer.release();
+    }
+
     public void reloadMediaPlayer() {
+        stopMedia();
         mediaPlayer = new MediaPlayer();
     }
 
@@ -50,10 +61,7 @@ public class ServicioReproduccion extends Service {
     }
 
     @Override
-    public void onDestroy() {
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
-        mediaPlayer.release();
+    public boolean onUnbind(Intent intent) {
+        return super.onUnbind(intent);
     }
 }
