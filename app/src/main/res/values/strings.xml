@@ -2,5 +2,7 @@
     <string name="app_name">AudioLibrosPro</string>
     <string name="drawer_open">navigation drawer abierto</string>
     <string name="drawer_close">navigation drawer cerrado</string>
+    <string name="ultimo_leido">Último leido</string>
+    <string name="buscar">Buscar</string>
 
 </resources>

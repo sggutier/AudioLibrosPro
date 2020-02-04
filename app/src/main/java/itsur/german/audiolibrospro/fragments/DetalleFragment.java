@@ -109,7 +109,7 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
             mediaPlayer.stop();
             mediaPlayer.release();
         } catch (Exception e) {
-            Log.d("Audiolibros", "Error en mediaPlayer.stop()");
+            Log.e("Audiolibros", "Error en mediaPlayer.stop()");
         }
         super.onStop();
     }
@@ -146,7 +146,6 @@ public class DetalleFragment extends Fragment implements View.OnTouchListener, M
     @Override
     public boolean isPlaying() {
         return mediaPlayer.isPlaying();
-
     }
 
     @Override
